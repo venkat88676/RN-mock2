@@ -89,9 +89,10 @@
         })
         .then((req)=>req.json())
         .then(()=>{
+            
+            alert(`Updated Successfully.. ${id}`)
             fetchData();
             console.log("updated")
-            alert(`Updated Successfully.. ${id}`)
         })
         .catch((err)=>console.log(err))
     }
