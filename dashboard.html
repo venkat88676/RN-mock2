@@ -91,7 +91,7 @@
         .then(()=>{
             fetchData();
             console.log("updated")
-            alert("Updated Successfully",id)
+            alert(`Updated Successfully.. ${id}`)
         })
         .catch((err)=>console.log(err))
     }
@@ -123,8 +123,7 @@
                 let updatebtn=document.getElementById("update")
                 updatebtn.addEventListener("click",()=>{
                 // e.preventDefault();
-                console.log("inside funtion",element.id,element.poster,element.name,element.description,element.date,element.location,element.category,element.price)
-                update(element.id)
+                    update(element.id)
                 }) 
                
             })
