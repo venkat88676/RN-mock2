@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <nav>
+        <a href="./index.html"><h3>Login</h3></a>
+        <a href="./dashboard.html"> <h3>Dashboard</h3></a>
+        <a href="./event.html"><h3>Events</h3></a>
+    </nav>
+    <div>
+        <select id="category-filter" onchange="filterCategory()">
+            <option value="">Select Category</option>
+            <option value="Music">Music</option>
+            <option value="Sports">Sports</option>
+            <option value="Workshop">Workshop</option>
+        </select>
+        <select  id="price-filter" onchange="sortPrice()">
+            <option value="">Sort By Price</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+    </div>
+    <div id="event-container">
+    </div>
+</body>
+</html>
+
+<script>
+    
+    let eventContainer=document.getElementById("event-container")
+    let jsonData=[]
+    fetchData()
+    function fetchData(){
+        fetch("https://json-server-jswc.onrender.com/events",{
+            method:"GET",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization":localStorage.getItem("token")
+            }
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+            console.log(data)
+            display(data)
+            jsonData=data
+        })
+        .catch((err)=>console.log(err))
+        
+    }
+    
+    let category_filter=document.getElementById("category-filter")
+    function filterCategory(){
+        console.log(category_filter.value)
+        let filterData= jsonData.filter((e)=>{
+            return e.category===category_filter.value
+        })
+        console.log(filterData)
+        display(filterData)
+    }
+    let priceFilter=document.getElementById("price-filter")
+    function sortPrice(){
+        console.log(priceFilter.value)
+        let filterData=""
+        if(priceFilter.value==="asc"){
+                filterData=jsonData.sort((a,b)=>a.price-b.price)
+        }
+        else if(priceFilter.value==="desc"){
+                filterData= jsonData.sort((a,b)=>b.price-a.price)
+        }
+        console.log(filterData)
+        display(filterData)
+    }
+
+    function display(data){
+        eventContainer.innerHTML=null
+        data.forEach(element => {
+            let card=document.createElement("div")
+            card.setAttribute("id","card")
+            let image=document.createElement("img")
+            image.setAttribute("id","poster")
+            image.src=`${element.poster}`
+            let name=document.createElement("h2");
+            name.innerText=element.name;
+            let desc=document.createElement("p")
+            desc.innerText=element.description
+            let date=document.createElement("p");
+            date.innerText=element.date;
+            let location=document.createElement("p");
+            location.innerText=element.location;
+            let category=document.createElement("p");
+            category.innerText=element.category;
+            let price=document.createElement("p")
+            price.innerText=element.price
+            
+            card.append(image,name,desc,date,location,category,price)
+            eventContainer.append(card)
+
+        });
+    }
+
+</script>

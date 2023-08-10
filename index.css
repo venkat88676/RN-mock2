@@ -1,0 +1,56 @@
+nav{
+    display: flex;
+    background-color: antiquewhite;
+    justify-content: space-around;
+}
+.form-container{
+    width: 40%;
+    margin: auto;
+    margin-top:10% ;
+    border: 0.2px solid black;
+    padding: 10px;
+    text-align: center;
+}
+.form-container input,.admin-form input {
+    width: 90%;
+    margin: 10px;
+}
+.dashboard-container{
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    border: .2px solid black;
+    padding: 10px;
+}
+.admin-form{
+    border: .2px solid black;
+    width: 30%;
+    padding: 10px;
+    text-align: center;
+}
+#table-data th ,#table-data td{
+    /* margin: 10px; */
+    border: .2px solid rgb(0, 110, 255);
+    padding: 10px;
+}
+.data-container{
+    width: 50%;
+}
+
+/* event */
+#event-container{
+    width: 80%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+}
+#poster{
+    width: 250px;
+}
+#card{
+    border: .2px solid black;
+    padding: 10px;
+    text-align: center;
+}

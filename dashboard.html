@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dashboard</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="admin-form">
+            <input type="text"  id="poster" placeholder="Image URL">
+            <input type="text"  id="name" placeholder="name of Event">
+            <input type="text"  id="description" placeholder="Description">
+            <input type="date"  id="date" placeholder="Date">
+            <input type="text"  id="location" placeholder="Location">
+            <select  id="category">
+                <option value="">Select Categorie</option>
+                <option value="Music">Music</option>
+                <option value="Sports">Sports</option>
+                <option value="Workshop">Workshop</option>
+            </select>
+            <input type="number" id="price" placeholder="Price">
+            <button onclick="onadd()">Submit</button>        
+    </div>
+    <div class="data-container">
+        <table id="table-data">
+            <tr>
+                <th>Name of the Event</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Category</th>
+                <th>Price</th>
+            </tr>
+          
+        </table>
+    </div>
+    </div>
+   
+</body>
+</html>
+
+<script>
+    fetchData()
+    function fetchData(){
+        fetch("https://json-server-jswc.onrender.com/events",{
+            method:"GET",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization":localStorage.getItem("token")
+            }
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+            console.log(data)
+            display(data)
+        })
+        .catch((err)=>console.log(err))
+        
+    }
+    let table=document.getElementById("table-data")
+    function display(data){
+        // table.innerHTML=null
+        data.forEach(element => {
+            let row=document.createElement("tr")
+            let name=document.createElement("td");
+            name.innerText=element.name;
+            let date=document.createElement("td");
+            date.innerText=element.date;
+            let location=document.createElement("td");
+            location.innerText=element.location;
+            let category=document.createElement("td");
+            category.innerText=element.category;
+            let price=document.createElement("td")
+            price.innerText=element.price
+            let editBtn=document.createElement("button")
+            editBtn.innerText="Edit";
+            let deleteBtn=document.createElement("button")
+            deleteBtn.innerText="Delete";
+            row.append(name,date,location,category,price,editBtn,deleteBtn)
+            table.append(row)
+
+        });
+    }
+
+    const onadd=()=>{
+        let payload={
+        poster:document.getElementById("poster").value ,
+        name: document.getElementById("name").value,
+        description: document.getElementById("description").value,
+        date: document.getElementById("date").value,
+        location: document.getElementById("location").value,
+        category: document.getElementById("category").value,
+        price:document.getElementById("price").value
+        }
+        console.log(payload)
+        fetch("https://json-server-jswc.onrender.com/events",{
+            method:"POST",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization":localStorage.getItem("token")
+            },
+            body: JSON.stringify(payload)
+        }).then(res=>res.json())
+        .then(res=>{
+            alert("Data Added")
+            console.log(res)
+        })
+        .catch(err=>console.log(err))
+    }
+
+</script>

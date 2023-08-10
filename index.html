@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home_page</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <nav>
+        <a href="./index.html"><h3>Login</h3></a>
+        <a href="./dashboard.html"> <h3>Dashboard</h3></a>
+        <a href="./event.html"><h3>Events</h3></a>
+    </nav>
+    <div class="form-container">
+        <input type="email"  id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="password">
+        <button id="loginBtn" onclick="onlogin()">Login</button>
+    </div>
+    
+</body>
+</html>
+
+<script>
+    const onlogin=()=>{
+        let payload={
+        email:document.getElementById("email").value,
+        password:document.getElementById("password").value
+    }
+    console.log(payload)
+    fetch("https://reqres.in/api/login",{
+        method:"POST",
+        headers:{
+            "Content-type":"application/json"
+        },
+        body: JSON.stringify(payload)
+    }).then(res=>res.json())
+    .then(res=>{
+        localStorage.setItem("token",res.token)
+        alert("login successfull")
+        console.log(res)
+        window.location.href="./dashboard.html"
+    })
+    .catch(err=>alert(err))
+    }
+
+</script>
