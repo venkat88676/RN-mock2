@@ -29,7 +29,7 @@ nav{
     padding: 10px;
     text-align: center;
 }
-#table-data th ,#table-data td{
+#table-data td,table th{
     /* margin: 10px; */
     border: .2px solid rgb(0, 110, 255);
     padding: 10px;

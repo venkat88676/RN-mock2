@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <nav>
+        <a href="./index.html"><h3>Login</h3></a>
+        <!-- <a href="./dashboard.html"> <h3>Dashboard</h3></a> -->
+        <a href="./event.html"><h3>Events</h3></a>
+    </nav>
     <div class="dashboard-container">
         <div class="admin-form">
             <input type="text"  id="poster" placeholder="Image URL">
@@ -21,10 +26,11 @@
                 <option value="Workshop">Workshop</option>
             </select>
             <input type="number" id="price" placeholder="Price">
-            <button onclick="onadd()">Submit</button>        
+            <button onclick="onadd()">Add Data</button>        
+            <button id="update">Update Data</button>
     </div>
     <div class="data-container">
-        <table id="table-data">
+        <table>
             <tr>
                 <th>Name of the Event</th>
                 <th>Date</th>
@@ -32,6 +38,9 @@
                 <th>Category</th>
                 <th>Price</th>
             </tr>
+        </table>
+        <table id="table-data">
+            
           
         </table>
     </div>
@@ -59,8 +68,36 @@
         
     }
     let table=document.getElementById("table-data")
+
+    function update(id){
+        console.log("updated data",id)
+        fetch(`https://json-server-jswc.onrender.com/events/${id}`,{
+        method:'PUT',
+        body:JSON.stringify({
+            poster:document.getElementById("poster").value ,
+            name: document.getElementById("name").value,
+            description: document.getElementById("description").value,
+            date: document.getElementById("date").value,
+            location: document.getElementById("location").value,
+            category: document.getElementById("category").value,
+            price:document.getElementById("price").value
+        }),
+        headers:{
+            "Authorization":localStorage.getItem("token"),
+            "Content-Type": "application/json"
+        }
+        })
+        .then((req)=>req.json())
+        .then(()=>{
+            fetchData();
+            console.log("updated")
+            alert("Updated Successfully",id)
+        })
+        .catch((err)=>console.log(err))
+    }
+
     function display(data){
-        // table.innerHTML=null
+        table.innerHTML=null
         data.forEach(element => {
             let row=document.createElement("tr")
             let name=document.createElement("td");
@@ -75,8 +112,41 @@
             price.innerText=element.price
             let editBtn=document.createElement("button")
             editBtn.innerText="Edit";
+            editBtn.addEventListener("click",()=>{
+                document.getElementById("poster").value=element.poster
+                document.getElementById("name").value=element.name;
+                document.getElementById("description").value=element.description
+                document.getElementById("date").value=element.date;
+                document.getElementById("location").value=element.location;
+                document.getElementById("category").value=element.category;
+                document.getElementById("price").value=element.price
+                let updatebtn=document.getElementById("update")
+                updatebtn.addEventListener("click",()=>{
+                // e.preventDefault();
+                console.log("inside funtion",element.id,element.poster,element.name,element.description,element.date,element.location,element.category,element.price)
+                update(element.id)
+                }) 
+               
+            })
             let deleteBtn=document.createElement("button")
             deleteBtn.innerText="Delete";
+
+            deleteBtn.addEventListener("click",()=>{
+                console.log(element.id)
+                fetch(`https://json-server-jswc.onrender.com/events/${element.id}`,{
+                method:"DELETE",
+                headers:{
+                    "Authorization":localStorage.getItem("token")
+                }
+                }).then(res=>res.json())
+                .then(res=>{
+                    alert("Post Deleted")
+                    fetchData()
+                    console.log(res)
+                })
+                .catch(err=>console.log(err))
+            })
+
             row.append(name,date,location,category,price,editBtn,deleteBtn)
             table.append(row)
 
@@ -104,6 +174,7 @@
         }).then(res=>res.json())
         .then(res=>{
             alert("Data Added")
+            fetchData()
             console.log(res)
         })
         .catch(err=>console.log(err))
