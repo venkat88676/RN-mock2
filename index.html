@@ -36,10 +36,16 @@
         body: JSON.stringify(payload)
     }).then(res=>res.json())
     .then(res=>{
-        localStorage.setItem("token",res.token)
-        alert("login successfull")
-        console.log(res)
-        window.location.href="./dashboard.html"
+        console.log(res.token)
+        if(res.token){
+            localStorage.setItem("token",res.token)   
+            alert("login successfull")
+            window.location.href="./dashboard.html"
+        }
+        else{
+            alert("Wrong credendial")
+        }
+       
     })
     .catch(err=>alert(err))
     }
